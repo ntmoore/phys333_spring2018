@@ -37,7 +37,7 @@ void loop() {
   float omega = 0.0062831853 * frequency;
   t1 = millis();
   while ((millis()-t1) < 5000) {
-    brightness = total_cycles * (1.0 + sin(omega * millis()));
+    brightness = total_cycles * (0.5*(1.0 + sin(omega * millis())));
     do_pwm(output_pin, fundamental_wait_time_us, brightness, total_cycles );
   }
   digitalWrite(13, LOW);
