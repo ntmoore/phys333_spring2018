@@ -12,7 +12,7 @@ int d0, d1;
 unsigned long t;
 
 // This is a  PREPROCESSOR MACRO - think of it as a constant
-#define ARRAY_SIZE 100
+#define ARRAY_SIZE 200
 
 int i;
 unsigned long edge_t[ARRAY_SIZE];
@@ -77,11 +77,11 @@ void print_out_mathematica_format(unsigned long edge_t[], int rise[]) {
   Serial.println("{");
   for (j = 0; j < ARRAY_SIZE; j++) {
     if (rise[j] == 0) {
-      sprintf(line, "{%ld,0},{%ld,1}", edge_t[j], edge_t[j]);
+      sprintf(line, "{%ld,1},{%ld,0},", edge_t[j], edge_t[j]);
     }
     else {
       if (rise[j] == 1) {
-        sprintf(line, "{%ld,1},{%ld,0}", edge_t[j], edge_t[j]);
+        sprintf(line, "{%ld,0},{%ld,1},", edge_t[j], edge_t[j]);
       }
       else {
         Serial.print("\nERROR IN RISE DATA!!!\n");
@@ -91,9 +91,6 @@ void print_out_mathematica_format(unsigned long edge_t[], int rise[]) {
     if (j % 5 == 4) {
       Serial.println();
     }
-  }
-  if (j < (ARRAY_SIZE - 1)) {
-    Serial.print(",");
   }
 
   Serial.println("}");
