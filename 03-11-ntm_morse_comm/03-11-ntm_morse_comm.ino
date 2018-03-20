@@ -94,12 +94,6 @@ void print_letter_space(int clk, int out_pin, int d) {
   return;
 }
 
-// print out the space between words
-void print_word_space(int clk, int out_pin, int d) {
-
-  
-}
-
 void do_one_clock_pulse(int clk, int d) {
   digitalWrite(clk, HIGH);
   delay(d / 2);
