@@ -1,11 +1,10 @@
 /*
   ntm_morse_comm
   Nathan Moore
+  www.github.com/ntmoore
   modified 2016 Feb 9
-
   Using a function to hide the morse code bit banging
     this example sends morse code and a clock to synchronize
-
   This parameter defines the length of a "dot" in Morse
   all other times are based on this unit, eg
     dash is 3d
@@ -15,6 +14,17 @@
    all according to wikipedia,
   https://en.wikipedia.org/wiki/Morse_code
 */
+
+/*
+  modified 2018-3-19
+  Ben Andrews
+  www.github.com/bandrewss
+
+  -moved word space into switch statement
+  -moved print_letter_space() function call into print_morse()
+  -changed for to while to traverse target string
+
+ */
 int d = 100; // dot length in ms
 
 // these are the pins the signal is sent out on
@@ -37,24 +47,23 @@ void setup() {
 
 void loop() {
 
-  char message1[] = "sos-hello-world-sos";
+  //char message1[] = "sos-hello-world-sos";
+  char message1[] = {"The-quick-brown-fox-jumps-over-the-lazy-dog-0123456789"};
 
-  int num_letters = sizeof(message1) / sizeof(char) - 1;
+  int i = 0;
 
-  for (int i = 0; i < num_letters; i++) {
-    //look for space
-    if (message1[i] == '-') {
-      print_word_space(clk_pin, signal_pin, d);
-    }
-    else {
+  // iterate over message until null terminator
+  while(message1[i] != '\0') {
       print_morse(clk_pin,  signal_pin, d, message1[i]);
-      print_letter_space(clk_pin, signal_pin, d);
       Serial.println(message1[i]);
-    }
+      i++;
   }
-  print_word_space(clk_pin, signal_pin, d);
-  print_word_space(clk_pin, signal_pin, d);
-  print_word_space(clk_pin, signal_pin, d);
+
+  print_morse(clk_pin,  signal_pin, d, '-');
+  print_morse(clk_pin,  signal_pin, d, '-');
+  print_morse(clk_pin,  signal_pin, d, '-');
+  print_morse(clk_pin,  signal_pin, d, '-');
+  
   Serial.println("");
 
 }
@@ -82,54 +91,6 @@ void print_letter_space(int clk, int out_pin, int d) {
   digitalWrite(clk, LOW);
   delay(d / 2);
   // 3
-  return;
-}
-
-// print out the space between words
-void print_word_space(int clk, int out_pin, int d) {
-
-  // flashing out clock signal for 7d
-  // implicitly, signal is held low, but let's make sure
-  digitalWrite(out_pin, LOW);
-  /* commenting out the first 3 cycles because every letter
-      is printed with a trailing letter space of 3d
-    // 0
-    digitalWrite(clk, HIGH);
-    delay(d / 2);
-    digitalWrite(clk, LOW);
-    delay(d / 2);
-    // 1
-    digitalWrite(clk, HIGH);
-    delay(d / 2);
-    digitalWrite(clk, LOW);
-    delay(d / 2);
-    // 2
-    digitalWrite(clk, HIGH);
-    delay(d / 2);
-    digitalWrite(clk, LOW);
-    delay(d / 2);
-  */
-  // 3
-  digitalWrite(clk, HIGH);
-  delay(d / 2);
-  digitalWrite(clk, LOW);
-  delay(d / 2);
-  // 4
-  digitalWrite(clk, HIGH);
-  delay(d / 2);
-  digitalWrite(clk, LOW);
-  delay(d / 2);
-  // 5
-  digitalWrite(clk, HIGH);
-  delay(d / 2);
-  digitalWrite(clk, LOW);
-  delay(d / 2);
-  // 6
-  digitalWrite(clk, HIGH);
-  delay(d / 2);
-  digitalWrite(clk, LOW);
-  delay(d / 2);
-  // 7
   return;
 }
 
@@ -778,6 +739,57 @@ int print_morse(int clk_pin, int out_pin, int d, char c) {
       digitalWrite(out_pin, LOW);
       break;
 
+    case '-': case ' ':
+      // flashing out clock signal for 7d
+      // implicitly, signal is held low, but let's make sure
+      digitalWrite(out_pin, LOW);
+      /* commenting out the first 3 cycles because every letter
+          is printed with a trailing letter space of 3d
+        // 0
+        digitalWrite(clk_pin, HIGH);
+        delay(d / 2);
+        digitalWrite(clk_pin, LOW);
+        delay(d / 2);
+        // 1
+        digitalWrite(clk_pin, HIGH);
+        delay(d / 2);
+        digitalWrite(clk_pin, LOW);
+        delay(d / 2);
+        // 2
+        digitalWrite(clk_pin, HIGH);
+        delay(d / 2);
+        digitalWrite(clk_pin, LOW);
+        delay(d / 2);
+      */
+
+      /* the next three are commented out because a letter space 
+           gets printed out after the word space
+      // 3
+      digitalWrite(clk_pin, HIGH);
+      delay(d / 2);
+      digitalWrite(clk_pin, LOW);
+      delay(d / 2);
+      // 4
+      digitalWrite(clk_pin, HIGH);
+      delay(d / 2);
+      digitalWrite(clk_pin, LOW);
+      delay(d / 2);
+      // 5
+      digitalWrite(clk_pin, HIGH);
+      delay(d / 2);
+      digitalWrite(clk_pin, LOW);
+      delay(d / 2);
+      */
+      
+      // 6
+      digitalWrite(clk_pin, HIGH);
+      delay(d / 2);
+      digitalWrite(clk_pin, LOW);
+      delay(d / 2);
+      // 7
+      break;
+      
+    
     default:
       // this is an error state
       Serial.print("!!!!!\n!!!!!\n!!!!!\n");
@@ -788,6 +800,7 @@ int print_morse(int clk_pin, int out_pin, int d, char c) {
       break;
   }
 
+  print_letter_space(clk_pin, signal_pin, d);
+
   return success;
 }
-
