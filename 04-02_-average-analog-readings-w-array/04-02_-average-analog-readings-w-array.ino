@@ -36,7 +36,7 @@ void loop() {
   Serial.print("{");
   Serial.print(    0.5 * (t1 + t2));
   Serial.print(",\t");
-  Serial.print(t2 - t1);
+  Serial.print( 0.5*(t2 - t1) );
   Serial.print(",\t");
   Serial.print(avg * (5.0 / 1023.0), 6);
   Serial.print(",\t");
